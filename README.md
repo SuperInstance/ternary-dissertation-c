@@ -1,26 +1,60 @@
 # ternary-dissertation-c
 
-C implementation of the dissertation engine — generates structured output proving the 5 laws of negative-space intelligence.
+Reference C implementation of ternary computing primitives from the SuperInstance dissertation series. Demonstrates Z₃ {-1, 0, +1} algebra operations at bare-metal level.
 
-## Components
+## Why This Matters
 
-- **Law** — represent one of the 5 laws (statement, evidence, statistics)
-- **EvidenceCollector** — gather evidence from simulation runs
-- **StatisticalTest** — perform basic statistical tests (mean, std, p-value approximation)
-- **ChapterGenerator** — generate formatted text chapters proving each law
-- **Dissertation** — assemble all chapters into a complete document
+Before building GPU runtimes in Rust, you need to prove the math works. This C implementation provides the simplest, most auditable proofs of ternary algebra — suitable for academic citation and embedded targets.
 
-## Build & Test
+## What's Inside
 
-```bash
-gcc -o test_dissertation tests/test_dissertation.c src/ternary_dissertation.c -lm -Wall -O2
-./test_dissertation
+- **Core Z₃ algebra**: addition, multiplication, negation using explicit match semantics
+- **Ternary matrices**: multiply, transpose, determinant
+- **Conservation verification**: prove that {-1,0,+1} operations preserve quantity
+- **Bit packing**: 2-bit encoding of ternary values for memory efficiency
+
+## The Five-Layer Stack
+
+```
+┌─────────────────┐
+│  cudaclaw        │  Persistent GPU kernels, warp consensus, SmartCRDT
+├─────────────────┤
+│  cuda-oxide      │  Flux → MIR → Pliron → NVVM → PTX compiler
+├─────────────────┤
+│  flux-core       │  Bytecode VM + A2A agent protocol
+├─────────────────┤
+│  pincher         │  "Vector DB as runtime, LLM as compiler"
+├─────────────────┤
+│  open-parallel   │  Async runtime (tokio fork)
+└─────────────────┘
 ```
 
-## The Five Laws
+## Building
 
-1. **Emergence of Negative-Space Intelligence** — Intelligence emerges from absent information
-2. **Conservation of Absence** — Total absence in closed ternary systems is conserved
-3. **Structural Void Principle** — Empty structures exhibit definable geometric properties
-4. **Ternary Completeness Theorem** — Complete ternary systems require exactly three orthogonal states
-5. **Negative-Space Self-Organization** — Negative-space structures spontaneously organize
+```bash
+mkdir build && cd build
+cmake ..
+make
+./test_ternary
+```
+
+## Design
+
+Z₃ arithmetic MUST use explicit match on all 9 pairs:
+
+```c
+int z3_add(int a, int b) {
+    switch(a) {
+        case -1: return (b == -1) ? -1 : (b == 0) ? -1 : 0;
+        case  0: return b;
+        case  1: return (b == -1) ? 0 : (b == 0) ? 1 : 1;
+    }
+    return 0;
+}
+```
+
+**Wrong**: `(a + b + 3) % 3 - 1` — gives incorrect results for edge cases.
+
+## License
+
+Apache-2.0
