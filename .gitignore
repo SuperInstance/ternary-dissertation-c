@@ -1,3 +1,5 @@
 *.o
 test_dissertation
 *.out
+target/
+Cargo.lock
